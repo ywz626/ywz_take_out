@@ -5,13 +5,11 @@ import com.sky.constant.AutoFillConstant;
 import com.sky.context.BaseContext;
 import com.sky.enumeration.OperationType;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
@@ -45,10 +43,10 @@ public class AutoFillAspect {
                 Method setUpdateUser = target.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
                 setUpdateUser.invoke(target, BaseContext.getCurrentId());
             }else if (value == OperationType.UPDATE){
-                Method setCreateUser = target.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, Long.class);
-                setCreateUser.invoke(target, BaseContext.getCurrentId());
-                Method setUpdateUser = target.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, Long.class);
+                Method setUpdateUser = target.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
                 setUpdateUser.invoke(target, BaseContext.getCurrentId());
+                Method setUpdateTime = target.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
+                setUpdateTime.invoke(target,LocalDateTime.now());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
