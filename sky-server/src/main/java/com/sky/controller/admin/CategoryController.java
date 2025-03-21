@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     public Result<List<Category>> categoryList(Integer type) {
-        categoryService.getList(type);
+        return Result.success(categoryService.getList(type));
     }
 
     /**
