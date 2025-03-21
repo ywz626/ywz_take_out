@@ -24,6 +24,16 @@ public class DishController {
     @Autowired
     private DishService dishService;
 
+    @GetMapping("/list")
+    public Result<List<Dish>> dishList(Long categoryId) {
+        return Result.success(dishService.list(categoryId));
+    }
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     * @return
+     */
     @PutMapping
     public Result update(@RequestBody DishDTO dishDTO) {
         dishService.update(dishDTO);
@@ -73,6 +83,11 @@ public class DishController {
         return Result.success();
     }
 
+    /**
+     * 批量删除菜品
+     * @param ids
+     * @return
+     */
     @DeleteMapping
     public Result deleteDish(@RequestParam("ids") List<Long> ids) {
         dishService.delete(ids);

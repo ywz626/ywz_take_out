@@ -43,8 +43,8 @@ public interface DishMapper {
      * @param dto
      * @return
      */
-    @Select("select * from dish order by id")
-    List<Dish> pageDish(DishPageQueryDTO dto);
+
+    List<DishVO> pageDish(DishPageQueryDTO dto);
 
 
     /**
@@ -81,4 +81,7 @@ public interface DishMapper {
      * @param ids
      */
     void deleteDish(List<Long> ids);
+
+    @Select("select * from dish where category_id=#{categoryId}")
+    List<Dish> list(Long categoryId);
 }

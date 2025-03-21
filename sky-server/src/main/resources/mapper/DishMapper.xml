@@ -62,4 +62,18 @@
     <select id="getFlavorsById" resultType="com.sky.entity.DishFlavor">
         select * from dish_flavor where dish_id=#{id}
     </select>
+    <select id="pageDish" resultType="com.sky.vo.DishVO">
+        select dish.*,category.name categoryName from dish join category on dish.category_id = category.id
+        <where>
+            <if test="categoryId!=null">
+                dish.category_id=#{categoryId}
+            </if>
+            <if test="name!=null">
+                and dish.name like concat('%',#{name},'%')
+            </if>
+            <if test="status!=null">
+                and dish.status=#{status}
+            </if>
+        </where>
+    </select>
 </mapper>

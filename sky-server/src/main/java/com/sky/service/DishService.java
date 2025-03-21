@@ -24,4 +24,6 @@ public interface DishService {
     void update(DishDTO dishDTO);
 
     void delete(List<Long> ids);
+
+    List<Dish> list(Long categoryId);
 }

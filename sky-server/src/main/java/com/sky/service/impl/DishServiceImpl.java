@@ -30,6 +30,8 @@ public class DishServiceImpl implements DishService {
 
     @Autowired
     private DishMapper dishMapper;
+    @Autowired
+    private DishService dishService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -90,10 +92,21 @@ public class DishServiceImpl implements DishService {
         }
     }
 
+    /**
+     * 批量删除菜品
+     * @param ids
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> ids) {
         dishMapper.deleteDish(ids);
         dishMapper.deleteFlavorById(ids);
     }
+
+    @Override
+    public List<Dish> list(Long categoryId) {
+        return dishMapper.list(categoryId);
+    }
+
+
 }
