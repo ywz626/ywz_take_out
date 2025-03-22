@@ -83,5 +83,7 @@ public interface DishMapper {
     void deleteDish(List<Long> ids);
 
     @Select("select * from dish where category_id=#{categoryId}")
-    List<Dish> list(Long categoryId);
+    List<Dish> listAdmin(Long categoryId);
+
+    List<DishVO> listUser(Long categoryId);
 }

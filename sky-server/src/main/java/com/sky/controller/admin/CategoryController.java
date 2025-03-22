@@ -15,7 +15,7 @@ import java.util.List;
  * @author 于汶泽
  *
  */
-@RestController
+@RestController("adminCategoryController")
 @RequestMapping("/admin/category")
 public class CategoryController {
 

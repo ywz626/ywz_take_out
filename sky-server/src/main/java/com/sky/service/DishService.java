@@ -25,5 +25,7 @@ public interface DishService {
 
     void delete(List<Long> ids);
 
-    List<Dish> list(Long categoryId);
+    List<Dish> listAdmin(Long categoryId);
+
+    List<DishVO> listUser(Long categoryId);
 }

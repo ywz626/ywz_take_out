@@ -26,6 +26,5 @@ public interface CategoryMapper {
     @Delete("delete from category where id=#{id}")
     void deleteCategory(Integer id);
 
-    @Select("select * from category where type=#{type} order by sort")
     List<Category> getList(Integer type);
 }

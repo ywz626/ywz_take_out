@@ -2,6 +2,8 @@ package com.sky.service;
 
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Setmeal;
+import com.sky.entity.SetmealDish;
 import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
 
@@ -24,4 +26,7 @@ public interface SetmealService {
 
     void updateStatus(Integer status, Long id);
 
+    List<Setmeal> listSetmeal(Long id);
+
+    List<SetmealDish> listDish(Long id);
 }

@@ -19,18 +19,19 @@ import java.util.List;
  * @author 于汶泽
  */
 @RequestMapping("admin/dish")
-@RestController
+@RestController("adminDishController")
 public class DishController {
     @Autowired
     private DishService dishService;
 
     @GetMapping("/list")
     public Result<List<Dish>> dishList(Long categoryId) {
-        return Result.success(dishService.list(categoryId));
+        return Result.success(dishService.listAdmin(categoryId));
     }
 
     /**
      * 修改菜品
+     *
      * @param dishDTO
      * @return
      */
@@ -42,6 +43,7 @@ public class DishController {
 
     /**
      * 修改菜品时回显id
+     *
      * @param id
      * @return
      */
@@ -52,18 +54,20 @@ public class DishController {
 
     /**
      * 修改菜品状态
+     *
      * @param status
      * @param id
      * @return
      */
     @PostMapping("/status/{status}")
-    public Result updateDishStatus(@PathVariable Integer status,Long id) {
-        dishService.updateStatus(status,id);
+    public Result updateDishStatus(@PathVariable Integer status, Long id) {
+        dishService.updateStatus(status, id);
         return Result.success();
     }
 
     /**
      * 分页查询
+     *
      * @param dto
      * @return
      */
@@ -74,6 +78,7 @@ public class DishController {
 
     /**
      * 新增菜品
+     *
      * @param dish
      * @return
      */
@@ -85,6 +90,7 @@ public class DishController {
 
     /**
      * 批量删除菜品
+     *
      * @param ids
      * @return
      */

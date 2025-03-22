@@ -95,4 +95,14 @@ public class SetmealServiceImpl implements SetmealService {
                 .build();
         setmealMapper.updateSetmeal(setmeal);
     }
+
+    @Override
+    public List<Setmeal> listSetmeal(Long id) {
+        return setmealMapper.listSetmeal(id);
+    }
+
+    @Override
+    public List<SetmealDish> listDish(Long id) {
+        return setmealMapper.listDish(id);
+    }
 }

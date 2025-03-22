@@ -76,4 +76,10 @@
             </if>
         </where>
     </select>
+    <select id="listUser" resultType="com.sky.vo.DishVO">
+        select dish.*, category.name categoryName
+        from dish
+                  left join category on dish.category_id = category.id
+        where dish.category_id = #{categoryId}
+    </select>
 </mapper>

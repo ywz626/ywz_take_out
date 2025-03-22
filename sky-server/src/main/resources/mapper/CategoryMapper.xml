@@ -30,4 +30,13 @@
         </where>
         order by sort
     </select>
+    <select id="getList" resultType="com.sky.entity.Category">
+        select * from category
+        <where>
+            <if test="type!=null">
+                type=#{type}
+            </if>
+        </where>
+        order by id
+    </select>
 </mapper>
