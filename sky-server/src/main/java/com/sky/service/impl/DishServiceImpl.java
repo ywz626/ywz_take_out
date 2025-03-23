@@ -15,11 +15,14 @@ import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.plaf.basic.BasicListUI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 于汶泽
@@ -31,7 +34,7 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private DishMapper dishMapper;
     @Autowired
-    private DishService dishService;
+    private RedisTemplate redisTemplate;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -49,6 +52,7 @@ public class DishServiceImpl implements DishService {
             }
             dishMapper.saveDishFlavor(flavors);
         }
+        redisTemplate.delete("dish_"+doDish.getCategoryId());
     }
 
     @Override
@@ -64,6 +68,10 @@ public class DishServiceImpl implements DishService {
                 .status(status)
                 .id(id)
                 .build();
+
+        DishVO dishVO = dishMapper.getById(id);
+        Long categoryId = dishVO.getCategoryId();
+        redisTemplate.delete("dish_" + categoryId);
         dishMapper.update(dish);
     }
 
@@ -90,6 +98,8 @@ public class DishServiceImpl implements DishService {
             }
             dishMapper.saveDishFlavor(flavors);
         }
+        Set key = redisTemplate.keys("dish_*");
+        redisTemplate.delete(key);
     }
 
     /**
@@ -99,6 +109,12 @@ public class DishServiceImpl implements DishService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> ids) {
+        List<Long> categoryIdById = dishMapper.getCategoryIdById(ids);
+        ArrayList<String> strings = new ArrayList<>();
+        for (Long categoryId : categoryIdById) {
+            strings.add("dish_" + categoryId);
+        }
+        redisTemplate.delete(strings);
         dishMapper.deleteDish(ids);
         dishMapper.deleteFlavorById(ids);
     }
@@ -111,11 +127,18 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public List<DishVO> listUser(Long categoryId) {
+        String key = "dish_" + categoryId;
+        List<DishVO> dishVo =(List<DishVO>) redisTemplate.opsForValue().get(key);
+        if(dishVo!=null&&dishVo.size()>0){
+            return dishVo;
+        }
+
         List<DishVO> dishVOS = dishMapper.listUser(categoryId);
         for(DishVO dvo:dishVOS){
             List<DishFlavor> flavorsById = dishMapper.getFlavorsById(dvo.getId());
             dvo.setFlavors(flavorsById);
         }
+        redisTemplate.opsForValue().set(key,dishVOS);
         return dishVOS;
     }
 }

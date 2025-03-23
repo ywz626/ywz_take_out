@@ -86,4 +86,6 @@ public interface DishMapper {
     List<Dish> listAdmin(Long categoryId);
 
     List<DishVO> listUser(Long categoryId);
+
+    List<Long> getCategoryIdById(List<Long> ids);
 }

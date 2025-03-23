@@ -40,4 +40,8 @@ public interface SetmealMapper {
     List<Setmeal> listSetmeal(Long id);
 
     List<SetmealDish> listDish(Long id);
+
+    Long getCategoryIdById(Long id);
+
+    List<Long> getCategorysIdById(List<Long> ids);
 }

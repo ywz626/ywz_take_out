@@ -11,6 +11,7 @@ import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +24,12 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/list")
     public Result<List<Dish>> dishList(Long categoryId) {
+
         return Result.success(dishService.listAdmin(categoryId));
     }
 
@@ -38,6 +42,8 @@ public class DishController {
     @PutMapping
     public Result update(@RequestBody DishDTO dishDTO) {
         dishService.update(dishDTO);
+        //清除缓存
+        redisTemplate.delete("dish_" + dishDTO.getCategoryId());
         return Result.success();
     }
 

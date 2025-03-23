@@ -5,6 +5,7 @@ import com.sky.entity.SetmealDish;
 import com.sky.result.Result;
 import com.sky.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class SetmealController {
      * @param id
      * @return
      */
+    @Cacheable(value = "setmeal" ,key="#id")
     @GetMapping("/list")
     public Result<List<Setmeal>> listDish(@RequestParam("categoryId") Long id) {
         return Result.success(setmealService.listSetmeal(id));

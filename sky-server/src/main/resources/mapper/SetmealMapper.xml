@@ -81,11 +81,26 @@
         select * from setmeal_dish where setmeal_id=#{id}
     </select>
     <select id="listSetmeal" resultType="com.sky.entity.Setmeal">
-        select * from setmeal where category_id=#{id}
+        select * from setmeal where category_id=#{id} and setmeal.status=1
     </select>
     <select id="listDish" resultType="com.sky.entity.SetmealDish">
-        select * from setmeal_dish
-        join setmeal on setmeal_dish.setmeal_id = setmeal.id
-        where setmeal_dish.setmeal_id=#{id}
+        select *
+        from setmeal_dish
+                 join setmeal on setmeal_dish.setmeal_id = setmeal.id
+                 left join dish on setmeal_dish.dish_id = dish.id
+        where setmeal_dish.setmeal_id = #{id}
+          and dish.status = 1
+    </select>
+    <select id="getCategoryIdById" resultType="java.lang.Long">
+        select category.id from category join setmeal on category.id = setmeal.category_id
+        where setmeal.id=#{id}
+    </select>
+    <select id="getCategorysIdById" resultType="java.lang.Long">
+        select distinct setmeal.category_id from setmeal
+        join category on setmeal.category_id = category.id
+        where setmeal.id in
+        <foreach collection="ids" close=")" open="(" item="id" separator=",">
+            #{id}
+        </foreach>
     </select>
 </mapper>

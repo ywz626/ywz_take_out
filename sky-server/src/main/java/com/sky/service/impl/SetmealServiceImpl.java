@@ -12,11 +12,16 @@ import com.sky.service.SetmealService;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 于汶泽
@@ -27,10 +32,14 @@ public class SetmealServiceImpl implements SetmealService {
     @Autowired
     private SetmealMapper setmealMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 新增套餐
      * @param setmeal
      */
+    @CacheEvict(value = "setmeal",key = "#setmeal.categoryId")
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveSetmeal(SetmealDTO setmeal) {
@@ -46,6 +55,7 @@ public class SetmealServiceImpl implements SetmealService {
             }
             setmealMapper.saveSetmealDish(setmealDishes);
         }
+//        redisTemplate.delete("setmeal_"+setmeal.getCategoryId());
     }
 
     @Override
@@ -55,9 +65,16 @@ public class SetmealServiceImpl implements SetmealService {
         return new PageResult(page.getTotal(), page.getResult());
     }
 
+    @CacheEvict(value = "setmeal", allEntries = true)
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(List<Long> ids) {
+//        List<Long> categorysIdById = setmealMapper.getCategorysIdById(ids);
+//        List<String> s = new ArrayList<>();
+//        for (Long id : categorysIdById) {
+//            s.add("setmeal_" + id);
+//        }
+//        redisTemplate.delete(s);
         setmealMapper.deleteSetmeal(ids);
         setmealMapper.deleteSetmealDish(ids);
     }
@@ -70,6 +87,7 @@ public class SetmealServiceImpl implements SetmealService {
         return setmealVO;
     }
 
+    @CacheEvict(value = "setmeal", allEntries = true)
     @Override
     public void update(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
@@ -85,20 +103,31 @@ public class SetmealServiceImpl implements SetmealService {
             }
             setmealMapper.saveSetmealDish(setmealDishes);
         }
+//        Set key = redisTemplate.keys("setmeal_*");
+//        redisTemplate.delete(key);
     }
 
+    @CacheEvict(value = "setmeal", allEntries = true)
     @Override
     public void updateStatus(Integer status, Long id) {
         Setmeal setmeal = Setmeal.builder()
                 .status(status)
                 .id(id)
                 .build();
+//        Long categoryIdById = setmealMapper.getCategoryIdById(id);
         setmealMapper.updateSetmeal(setmeal);
+//        redisTemplate.delete("setmeal_"+setmeal.getCategoryId());
     }
 
     @Override
     public List<Setmeal> listSetmeal(Long id) {
-        return setmealMapper.listSetmeal(id);
+//        List<Setmeal> list =(List<Setmeal>) redisTemplate.opsForValue().get("setmeal_" + id);
+//        if(list!=null&&list.size()>0) {
+//            return list;
+//        }
+        List<Setmeal>list = setmealMapper.listSetmeal(id);
+//        redisTemplate.opsForValue().set("setmeal_" + id, list);
+        return list;
     }
 
     @Override

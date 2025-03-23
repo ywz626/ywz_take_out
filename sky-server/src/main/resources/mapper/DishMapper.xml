@@ -80,6 +80,13 @@
         select dish.*, category.name categoryName
         from dish
                   left join category on dish.category_id = category.id
-        where dish.category_id = #{categoryId}
+        where dish.category_id = #{categoryId} and dish.status=1
+    </select>
+    <select id="getCategoryIdById" resultType="java.lang.Long">
+        select distinct dish.category_id from dish join category on dish.category_id = category.id
+        where dish.id in
+        <foreach collection="ids" separator="," item="id" open="(" close=")">
+            #{id}
+        </foreach>
     </select>
 </mapper>
