@@ -18,4 +18,7 @@ public interface UserMapper {
     @Options(useGeneratedKeys = true,keyProperty = "id")
     @Select("select * from user where openid=#{openid}")
     User getUser(String openid);
+
+    @Select("select * from user where id=#{currentId}")
+    User getById(Long currentId);
 }

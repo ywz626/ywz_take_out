@@ -12,8 +12,8 @@ import java.util.List;
 @Mapper
 public interface ShoppingCartMapper {
 
-    @Select("select * from shopping_cart")
-    List<ShoppingCart> listCart();
+    @Select("select * from shopping_cart where user_id=#{userId}")
+    List<ShoppingCart> listCart(Long userId);
 
     ShoppingCart selectBy(ShoppingCart shoppingCart);
 

@@ -31,7 +31,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<ShoppingCart> listCart() {
-        return shoppingCartMapper.listCart();
+        return shoppingCartMapper.listCart(BaseContext.getCurrentId());
     }
 
     @Override
