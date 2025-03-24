@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -76,5 +77,15 @@ public interface OrderMapper {
 
     @Update("update orders set status=5 where id=#{id}")
     void compeleteOrder(Long id);
+
+    @Select("select * from orders where status=#{pendingPayment} and order_time<#{time}")
+    List<Orders> selectByStatusAndOrderTime(Integer pendingPayment, LocalDateTime time);
+
+    @Update("update orders set status=#{cancelled}")
+    void updateStatusByOutTime(Integer cancelled);
+
+    @Select("select * from orders where status=4")
+    List<Orders> selectBystatusOnDelivery();
+
 }
 
