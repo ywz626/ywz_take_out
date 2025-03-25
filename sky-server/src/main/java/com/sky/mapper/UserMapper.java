@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Map;
+
 /**
  * @author 于汶泽
  */
@@ -21,4 +23,10 @@ public interface UserMapper {
 
     @Select("select * from user where id=#{currentId}")
     User getById(Long currentId);
+
+    @Select("select count(*) from user where create_time between #{begin} and #{end}")
+    Double getNewUserCount(Map map);
+
+    @Select("select count(*) from user")
+    Double getTotalUserCount(Map map);
 }

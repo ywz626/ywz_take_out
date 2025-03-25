@@ -1,20 +1,18 @@
 package com.sky.mapper;
 
-import com.sky.dto.OrdersCancelDTO;
-import com.sky.dto.OrdersConfirmDTO;
-import com.sky.dto.OrdersPageQueryDTO;
-import com.sky.dto.OrdersRejectionDTO;
+import com.sky.dto.*;
 import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.vo.OrderListVO;
+import com.sky.vo.SalesTop10ReportVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 于汶泽
@@ -87,5 +85,28 @@ public interface OrderMapper {
     @Select("select * from orders where status=4")
     List<Orders> selectBystatusOnDelivery();
 
+    Double getTotalTurnover(Map map);
+
+    @Select("select count(*) from orders")
+    Integer countOrders();
+
+    @Select("select count(*) from orders where status=#{status}")
+    Integer countEffectiveOrders(Integer status);
+
+    @Select("select count(*) from orders where order_time between #{begin} and #{end}")
+    Integer countOneDayOrders(Map map);
+
+    @Select("select count(*) from orders where status=#{status} and order_time between #{begin} and #{end}")
+    Integer countOneDayEffectiveOrders(Map map);
+
+    @Select("select name nameList  from order_detail join orders on order_detail.order_id = orders.id and status=#{status} " +
+            "where order_time between #{begin} and #{end} "+
+            "group by name order by sum(order_detail.number) desc limit 0,10")
+    List<String> salesTop10Name(Map map);
+
+    @Select("select sum(order_detail.number) numberList from order_detail join orders on order_detail.order_id = orders.id and status=#{status} " +
+            "where order_time between #{begin} and #{end} "+
+            "group by name order by sum(order_detail.number) desc limit 0,10")
+    List<String> salesTop10Num(Map map);
 }
 
