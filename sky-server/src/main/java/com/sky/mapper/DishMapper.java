@@ -88,4 +88,7 @@ public interface DishMapper {
     List<DishVO> listUser(Long categoryId);
 
     List<Long> getCategoryIdById(List<Long> ids);
+
+    @Select("select count(*) from dish where status=#{status}")
+    Integer getDishcont(Integer status);
 }

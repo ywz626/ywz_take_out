@@ -103,4 +103,10 @@
             #{id}
         </foreach>
     </select>
+    <select id="getSetmealCount" resultType="java.lang.Integer">
+        select count(*) from setmeal
+        <where>
+            status=#{status}
+        </where>
+    </select>
 </mapper>

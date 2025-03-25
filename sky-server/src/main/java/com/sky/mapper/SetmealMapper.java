@@ -7,6 +7,7 @@ import com.sky.entity.SetmealDish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -44,4 +45,6 @@ public interface SetmealMapper {
     Long getCategoryIdById(Long id);
 
     List<Long> getCategorysIdById(List<Long> ids);
+
+    Integer getSetmealCount(Integer status);
 }

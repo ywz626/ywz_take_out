@@ -25,8 +25,8 @@ public interface UserMapper {
     User getById(Long currentId);
 
     @Select("select count(*) from user where create_time between #{begin} and #{end}")
-    Double getNewUserCount(Map map);
+    Integer getNewUserCount(Map map);
 
     @Select("select count(*) from user")
-    Double getTotalUserCount(Map map);
+    Integer getTotalUserCount(Map map);
 }

@@ -77,24 +77,24 @@ public class ReportServiceImpl implements ReportService {
             dateList.add(begin);
             begin = begin.plusDays(1);
         }
-        List<Double> newUserList = new ArrayList<>();
-        List<Double> totalUserList = new ArrayList<>();
+        List<Integer> newUserList = new ArrayList<>();
+        List<Integer> totalUserList = new ArrayList<>();
 
         for (LocalDate date : dateList) {
             Map map = new HashMap();
             map.put("begin", LocalDateTime.of(date, LocalTime.MIN));
             map.put("end", LocalDateTime.of(date, LocalTime.MAX));
-            Double newUserCount = userMapper.getNewUserCount(map);
-            Double totalUserCount = userMapper.getTotalUserCount(map);
+            Integer newUserCount = userMapper.getNewUserCount(map);
+            Integer totalUserCount = userMapper.getTotalUserCount(map);
             if(newUserCount != null) {
                 newUserList.add(newUserCount);
             }else {
-                newUserList.add(0.0);
+                newUserList.add(0);
             }
             if(totalUserCount != null) {
                 totalUserList.add(totalUserCount);
             }else {
-                totalUserList.add(0.0);
+                totalUserList.add(0);
             }
         }
         return UserReportVO.builder()
@@ -106,6 +106,10 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public OrderReportVO orderStatistics(LocalDate begin, LocalDate end) {
+        Map map = new HashMap();
+        map.put("begin", LocalDateTime.of(begin, LocalTime.MIN));
+        map.put("end", LocalDateTime.of(end, LocalTime.MAX));
+
         List<LocalDate> dateList = new ArrayList<>();
         while (!begin.isAfter(end)) {
             dateList.add(begin);
@@ -113,24 +117,26 @@ public class ReportServiceImpl implements ReportService {
         }
         List<Integer> allOrders = new ArrayList<>();
         List<Integer> effectiveOrders = new ArrayList<>();
-        Integer allOrderCount = orderMapper.countOrders();
-        Integer effectiveOrderCount = orderMapper.countEffectiveOrders(Orders.COMPLETED);
+        Integer allOrderCount = orderMapper.countOrdersByStatus(map);
+        map.put("status", Orders.COMPLETED);
+        Integer effectiveOrderCount = orderMapper.countOrdersByStatus(map);
         for (LocalDate date : dateList) {
-            Map map = new HashMap();
-            map.put("status", Orders.COMPLETED);
+
             map.put("begin", LocalDateTime.of(date, LocalTime.MIN));
             map.put("end", LocalDateTime.of(date, LocalTime.MAX));
-            Integer Orders = orderMapper.countOneDayOrders(map);
-            Integer EffectiveOrders = orderMapper.countOneDayEffectiveOrders(map);
-            if (Orders == null){
-                Orders = 0;
+            Integer allOrdersInAllTime = orderMapper.countOrdersByStatus(map);
+            map.put("status", Orders.COMPLETED);
+            Integer EffectiveOrders = orderMapper.countOrdersByStatus(map);
+            if (allOrdersInAllTime == null){
+                allOrdersInAllTime = 0;
             }
             if (EffectiveOrders == null){
                 EffectiveOrders = 0;
             }
-            allOrders.add(Orders);
+            allOrders.add(allOrdersInAllTime);
             effectiveOrders.add(EffectiveOrders);
         }
+        log.info("effectiveOrderCount:{}，allOrdercount:{}", effectiveOrderCount,allOrderCount);
         Double pow = (double) effectiveOrderCount/allOrderCount;
         return OrderReportVO.builder()
                 .dateList(StringUtils.join(dateList,","))
