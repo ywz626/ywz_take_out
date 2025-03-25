@@ -19,6 +19,7 @@ import com.sky.service.OrderService;
 import com.sky.utils.HttpClientUtil;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.*;
+import com.sky.webSocket.WebSocketServer;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.jettison.json.JSONException;
@@ -54,6 +55,9 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private OrderDetailMapper orderDetailMapper;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Value("${sky.shop.address}")
     private String shopAddress;
@@ -240,6 +244,17 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.compeleteOrder(id);
     }
 
+    @Override
+    public void reminder(Long id) {
+        Map map = new HashMap();
+        map.put("type",2);
+        map.put("id",id);
+        OrderListVO order = orderMapper.detail(id, BaseContext.getCurrentId());
+        map.put("content","订单号："+order.getNumber());
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
+    }
+
 
     public void paySuccess(String orderId) {
         Orders orders = orderMapper.getBy(orderId, BaseContext.getCurrentId());
@@ -252,6 +267,15 @@ public class OrderServiceImpl implements OrderService {
                 .estimatedDeliveryTime(LocalDateTime.now().plusHours(1))
                 .build();
         orderMapper.update(order);
+
+        //通过websokect传递消息
+        Map map = new HashMap();
+        map.put("type",1);
+        map.put("orderId",orders.getId());
+        map.put("content","订单号: "+orderId);
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
     }
 
 
