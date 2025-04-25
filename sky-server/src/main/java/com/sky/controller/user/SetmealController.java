@@ -31,6 +31,11 @@ public class SetmealController {
         return Result.success(setmealService.listSetmeal(id));
     }
 
+    /**
+     * 根据套餐id查询套餐菜品
+     * @param id
+     * @return
+     */
     @GetMapping("/dish/{id}")
     public Result<List<SetmealDish>> listDishById(@PathVariable Long id) {
         return Result.success(setmealService.listDish(id));

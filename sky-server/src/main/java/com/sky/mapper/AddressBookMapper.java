@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * @author 于汶泽
  */
-@Mapper
 public interface AddressBookMapper {
     @Select("select * from address_book")
     List<AddressBook> list();

@@ -125,6 +125,11 @@ public class DishServiceImpl implements DishService {
     }
 
 
+    /**
+     * 用户端查询菜品
+     * @param categoryId
+     * @return
+     */
     @Override
     public List<DishVO> listUser(Long categoryId) {
         String key = "dish_" + categoryId;

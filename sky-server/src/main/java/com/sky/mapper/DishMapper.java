@@ -36,7 +36,7 @@ public interface DishMapper {
      * 新增菜品的口味
      * @param dishFlavors
      */
-    void saveDishFlavor(List<DishFlavor> dishFlavors);
+    void saveDishFlavor( List<DishFlavor> dishFlavors);
 
     /**
      * 分页查询

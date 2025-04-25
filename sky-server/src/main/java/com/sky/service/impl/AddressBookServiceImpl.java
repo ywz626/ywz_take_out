@@ -4,9 +4,13 @@ import com.sky.context.BaseContext;
 import com.sky.dto.AddressBookDefaultDTO;
 import com.sky.entity.AddressBook;
 import com.sky.mapper.AddressBookMapper;
+import com.sky.mapper.OrderMapper;
 import com.sky.result.Result;
 import com.sky.service.AddressBookService;
+import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.patterns.IScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +18,12 @@ import java.util.List;
 /**
  * @author 于汶泽
  */
-@Service
+@RequiredArgsConstructor
+@Service()
 public class AddressBookServiceImpl implements AddressBookService {
 
-    @Autowired
-    private AddressBookMapper addressBookMapper;
+    private final AddressBookMapper addressBookMapper;
+
     @Override
     public List<AddressBook> list() {
         return addressBookMapper.list();

@@ -6,6 +6,8 @@ import com.sky.entity.Category;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
+import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.message.ReusableMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +17,12 @@ import java.util.List;
  * @author 于汶泽
  *
  */
+@RequiredArgsConstructor
 @RestController("adminCategoryController")
 @RequestMapping("/admin/category")
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping("/list")
     public Result<List<Category>> categoryList(Integer type) {
@@ -80,5 +82,9 @@ public class CategoryController {
     @GetMapping("/page")
     public Result<PageResult> CategoryPage(CategoryPageQueryDTO cDto){
         return Result.success(categoryService.CategoryPage(cDto));
+    }
+    @RequestMapping(value = "/age",method = RequestMethod.GET)
+    public Result test(){
+        return Result.success();
     }
 }
